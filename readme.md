@@ -46,3 +46,17 @@ docker create \
     -v $downloadDir:/download \
     abnormalend/seedboxbuddy
 ```
+
+### Example Docker Compose 
+```yaml
+version: '3.3'
+services:
+    seedboxbuddy:
+        image: abnormalend/seedboxbuddy
+        container_name: seedboxybuddy
+        environment:
+            - TZ=America/Detroit
+        volumes:
+            - '$configDir:/config'
+            - '$downloadDir:/download'
+```
