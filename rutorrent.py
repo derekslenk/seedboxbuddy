@@ -9,6 +9,7 @@ import paramiko
 import boto3
 import botocore
 import errno
+import base64
 from paramiko import SSHClient
 from scp import SCPClient
 
@@ -68,13 +69,13 @@ class rutorrent:
 
     def grabTorrents(self):
         url = "http://" + self.server + self.ruTorrentPath + "/httprpc/action.php"
-        payload = {'mode': 'list'}
-        headers = {'Content-Type': "application/x-www-form-urlencoded",'Cache-Control': "no-cache",}
+        payload = {"mode=list"}
+        headers = {'Content-Type': "application/x-www-form-urlencoded",'Cache-Control': "no-cache",'Authorization': base64.b64encode(self.username + ":" + self.password) }
         json_data = None
         for attempt in range(self.grabtorrent_retry_count):
             try:
                 self.logger.debug("Try #" + str(attempt))
-                response = requests.request("POST", url, data=payload, headers=headers, auth=(self.username,self.password))
+                response = requests.request("POST", url, data=payload, headers=headers)
                 json_data = response.json()
             except Exception as e:
                 self.logger.error("something has gone wrong, unable to download torrent lists.  Will retry in " + str(self.grabtorrent_retry_delay) + " seconds.")
