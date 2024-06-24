@@ -35,7 +35,11 @@ Container will run in UTC time zone unless specified.  Supports setting the time
 [List of time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
 
 ### Folders
-When running inside docker, it will look for the settings.ini inside of /config rather than the program directory.  The default download folder is /download.  Map volumes to both these points to store your settings and send your downloads to your intended storage location.
+When running inside docker, it will look for the settings.ini inside of /config rather than the program directory. 
+
+If settings.ini does not exist in the config directory when you start the container, it will create a settings.ini.sample for you to start with. Copy to settings.ini, change what you need, and restart the container.
+
+The default download folder is /download.  Map volumes to both these points to store your settings and send your downloads to your intended storage location.
 
 ### Example Docker Start
 ```bash
@@ -45,4 +49,18 @@ docker create \
     -v $configDir:/config \
     -v $downloadDir:/download \
     abnormalend/seedboxbuddy
+```
+
+### Example Docker Compose 
+```yaml
+version: '3.3'
+services:
+    seedboxbuddy:
+        image: abnormalend/seedboxbuddy
+        container_name: seedboxybuddy
+        environment:
+            - TZ=America/Detroit
+        volumes:
+            - '$configDir:/config'
+            - '$downloadDir:/download'
 ```
